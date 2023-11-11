@@ -1,11 +1,18 @@
+
+
 const fs = require('fs');
 const pdf = require('pdf-parse');
 
-function extractTextFromPDF(pdfFilePath) {
-    let dataBuffer = fs.readFileSync(pdfFilePath);
-
+const txtToPDF = async (pdfFilePath) =>{
+    
+    let dataBuffer = await fs.readFileSync(pdfFilePath);
+    
     pdf(dataBuffer).then(function(data) {
-        console.log(data.text);
+        
+        let dataToSened= 'Da-mi 10 intrebari pe baza textului: ';
+        dataToSened= dataToSened.concat(data.text);
+        //console.log(dataToSened);
+        return dataToSened;
     }).catch(function(error) {
         console.error('Error parsing PDF:', error);
     });
@@ -13,8 +20,9 @@ function extractTextFromPDF(pdfFilePath) {
 
 // Replace 'path/to/your/pdf-file.pdf' with the path to your PDF file
 try {
-    console.log(`1`)
-    extractTextFromPDF('C:/Users/adria/Downloads/26-30-I-1-Acta-Mvsei-Napocensis-preistorie-istorie-arheologie-1994_040.pdf');
+    txtToPDF('C:/Users/adria/Downloads/regimul-national-comunist-in-romania.pdf');
 } catch (error) {
     console.error('Error reading PDF file:', error);
 }
+
+module.exports = txtToPDF; 
