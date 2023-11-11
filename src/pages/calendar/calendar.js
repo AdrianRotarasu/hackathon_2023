@@ -1,16 +1,21 @@
-import "./home.css";
+import "./calendar.css";
 import { authContext } from "../../helpers/authContext"
-
+import Menu from  "../../fragments/menu/menu"
 import {useContext} from "react";
+import React, { useState } from "react"; 
 
-function Home() {
+function Calendar() {
   const { authState } = useContext(authContext);
 
   return (
     <div>
+      <Menu />
       {authState.status?
       <>
-      <p>iesti logat pe contul {authState.username}</p>
+      <p>iesti logat pe contul {authState.username} si esti pe pagina calendar</p>
+
+      
+
       </>
       :
       <>
@@ -24,4 +29,4 @@ function Home() {
 
 }
 
-export default Home;
+export default Calendar;

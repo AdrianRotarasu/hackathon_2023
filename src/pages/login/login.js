@@ -4,7 +4,7 @@ import Axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { authContext } from "../../helpers/authContext";
 import { notification } from "antd";
-
+import Menu from  "../../fragments/menu/menu"
 
 function Login() {
   const navigate = useNavigate();
@@ -34,13 +34,14 @@ function Login() {
           username: response.data.username,
           status: true,
         });
-        navigate("/");
+        navigate("/lessons");
       }
     });
   };
 
   return (
     <>
+    <Menu/>
       <div className="container">
         <form name="form1" className="box">
           <h5>LOGIN INTO YOUR ACCOUNT</h5>

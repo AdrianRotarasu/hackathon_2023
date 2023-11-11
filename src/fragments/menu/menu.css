@@ -1,0 +1,89 @@
+.nav {
+	margin: 27px auto 0;
+	position: relative;
+	width: 210px;
+	height: 50px;
+	background-color: #34495e;
+	border-radius: 8px;
+	font-size: 0;
+}
+.navLogged {
+	margin: 27px auto 0;
+	position: relative;
+	width: 510px;
+	height: 50px;
+	background-color: #34495e;
+	border-radius: 8px;
+	font-size: 0;
+}
+.nav .nav-link, .navLogged .nav-link{
+	line-height: 50px;
+	height: 100%;
+	font-size: 16px;
+	display: inline-block;
+	position: relative;
+	z-index: 1;
+	text-transform: uppercase;
+	text-align: center;
+	color: white;
+	cursor: pointer;
+}
+.nav .animation, .navLogged .animation {
+	position: absolute;
+	height: 100%;
+	top: 0;
+	z-index: 0;
+	transition: all .5s ease 0s;
+	border-radius: 8px;
+}
+.nav-link:nth-child(1) {
+	width: 100px;
+}
+.nav-link:nth-child(2) {
+	width: 110px;
+}
+.nav-link:nth-child(3) {
+	width: 160px;
+}
+.nav-link:nth-child(4) {
+	width: 140px;
+}
+.nav-link:nth-child(5) {
+	width: 160px;
+}
+
+.nav-link:nth-child(6) {
+	width: 120px;
+}
+
+.nav .start-login, .navLogged .start-lessons, .nav-link:nth-child(1):hover~.animation {
+	width: 100px;
+	left: 0;
+	background-color: #1abc9c;
+}
+.nav .start-register, .navLogged .start-calendar, .nav-link:nth-child(2):hover~.animation {
+	width: 110px;
+	left: 100px;
+	background-color: #3498db;
+}
+.nav .start-leaderboard, .navLogged .start-leaderboard, .nav-link:nth-child(3):hover~.animation {
+	width: 160px;
+	left: 210px;
+	background-color: #e74c3c;
+}
+
+.nav-link:nth-child(4):hover~.animation {
+	width: 140px;
+	left: 370px;
+	background-color: #22e6a5;
+}
+
+button{
+	background: none;
+	border: none;
+}
+
+.coins-text{
+	display: inline-flex;
+	margin-left: 4px;
+}

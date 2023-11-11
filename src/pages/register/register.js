@@ -5,6 +5,7 @@ import Axios from "axios";
 import {useFormik} from "formik";
 import {schema} from "../../schemas/schema"
 import { notification } from 'antd';
+import Menu from  "../../fragments/menu/menu"
 
 function Register() {
   const navigate = useNavigate();
@@ -45,6 +46,7 @@ function Register() {
   
   return (
     <>
+    <Menu/>
     <div className="containerr">
     
     <form autoComplete="off" name="form1" className="box" onSubmit={handleSubmit}>

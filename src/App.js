@@ -1,6 +1,7 @@
-import Home from "./pages/home/home";
+import Lessons from "./pages/lessons/lessons";
 import Register from "./pages/register/register";
 import Login from "./pages/login/login";
+import Calendar from "./pages/calendar/calendar";
 import { authContext } from "./helpers/authContext";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -42,9 +43,10 @@ useEffect(() => {
       <Router>
 
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/lessons" element={<Lessons />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/calendar" element={<Calendar />} />
         </Routes>
       </Router>
       </authContext.Provider>
