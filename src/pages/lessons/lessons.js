@@ -142,7 +142,7 @@ function Lessons() {
   }
 
   const quizz = {
-    "quizTitle": "React Quiz Component Demo",
+    "quizTitle": `Quiz ${selectedCourse}`,
     "questions": quizes
   }
 

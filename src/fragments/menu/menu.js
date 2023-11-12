@@ -27,7 +27,7 @@ const logout = () => {
       {authState.status?
       <>
       <nav className="navLogged">
-		<Link to="/lessons" className="nav-link" style={{ textDecoration: 'none' }}>Lessons</Link>
+		<Link to="/lessons" className="nav-link" style={{ textDecoration: 'none' }}>Lecții</Link>
 		<Link to="/calendar" className="nav-link" style={{ textDecoration: 'none' }}>Calendar</Link>
     <Link to="/myprofile" className="nav-link" style={{ textDecoration: 'none' }}><div>{authState.username}</div></Link>
     <button onClick={logout} className="nav-link">LOGOUT</button>
