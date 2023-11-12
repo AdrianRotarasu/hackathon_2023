@@ -32,7 +32,6 @@ function Lessons() {
             },
           }
         );
-        setCoursesList(response.data)
         let template = [];
         for (let i = 0; i < response.data.length; i++) {
           const name = response.data[i].name;

@@ -2,6 +2,7 @@ import Lessons from "./pages/lessons/lessons";
 import Register from "./pages/register/register";
 import Login from "./pages/login/login";
 import Calendar from "./pages/calendar/calendar";
+import MyProfile from "./pages/myProfile/myProfile";
 import { authContext } from "./helpers/authContext";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -47,6 +48,7 @@ useEffect(() => {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/calendar" element={<Calendar />} />
+          <Route path="/myprofile" element={<MyProfile />} />
         </Routes>
       </Router>
       </authContext.Provider>
