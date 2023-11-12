@@ -110,7 +110,31 @@ function Lessons() {
   /////////////////////////
   const renderCustomResultPage = (obj) => {
     console.log(obj);
-    //Aici david
+    const handleOk = async () => {
+      setConfirmLoading(true);
+      const response = await Axios.post(
+        "http://localhost:3001/addScore",
+        {
+          score: obj,
+          course: selectedCourse,
+        },
+        {
+          headers: {
+            "x-access-token": localStorage.getItem("token"),
+          },
+        }
+      );
+      if (response.data.type === "success") {
+        notification[response.data.type]({
+          message: response.data.message,
+          description: response.data.description,
+        });
+        setOpen(false);
+        setConfirmLoading(false);
+      }
+    }
+    handleOk()
+      
     return (
       <div>
         This is a custom result page. You can use obj to render your custom result page
