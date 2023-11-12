@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Upload, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { authContext } from "../../helpers/authContext";
@@ -7,31 +7,107 @@ import axios from 'axios';
 import Quiz from 'react-quiz-component';
 import "./lessons.css";
 import { Button, Modal } from 'antd';
+import { Select } from 'antd';
+import { Input } from 'antd';
+import Axios from "axios";
+import { notification } from "antd";
 
 function Lessons() {
 
   const [isSelecting, setIsSelecting] = useState(true);
+  const [startQuiz, setStartQuiz] = useState(false);
+  const [addCourse, setAddCourse] = useState('');
+  const [coursesList, setCoursesList] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState('')
+  const [quizes, setQuizes] = useState([]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await Axios.get(
+          "http://localhost:3001/fetchCourseName",
+          {
+            headers: {
+              "x-access-token": localStorage.getItem("token"),
+            },
+          }
+        );
+        setCoursesList(response.data)
+        let template = [];
+        for (let i = 0; i < response.data.length; i++) {
+          const name = response.data[i].name;
+
+
+          const itemTemplate = {
+            value: name,
+            label: name,
+          };
+
+
+          template.push(itemTemplate);
+        }
+        setCoursesList(template);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
+  // MODAL PENTRU ADAUGAREA UNEI MATERII NOI
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const [modalText, setModalText] = useState('Content of the modal');
   const showModal = () => {
     setOpen(true);
   };
-  const handleOk = () => {
-    setModalText('The modal will be closed after two seconds');
+  const handleOk = async () => {
     setConfirmLoading(true);
-    setTimeout(() => {
+    const response = await Axios.post(
+      "http://localhost:3001/addCourse",
+      {
+        course: addCourse,
+      },
+      {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      }
+    );
+
+    if (response.data.type === "success") {
+      notification[response.data.type]({
+        message: response.data.message,
+        description: response.data.description,
+      });
       setOpen(false);
       setConfirmLoading(false);
-    }, 2000);
+      setAddCourse("")
+    }
+
   };
   const handleCancel = () => {
-    console.log('Clicked cancel button');
     setOpen(false);
   };
+  const handleInputChange = (e) => {
+    setAddCourse(e.target.value);
+  };
+  ///////////////////////////////
 
-  
+  //PENTRU SELECTAREA MATERIEI
+  const onChange = (value) => {
+    setSelectedCourse(value);
+  };
+  const onSearch = (value) => {
+    console.log('search:', value);
+  };
+
+  // Filter `option.label` match the user type `input`
+  const filterOption = (input, option) =>
+    (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
+
+  /////////////////////////
   const renderCustomResultPage = (obj) => {
     console.log(obj);
     //Aici david
@@ -42,54 +118,11 @@ function Lessons() {
     )
   }
 
-  const quizz =  {
+  const quizz = {
     "quizTitle": "React Quiz Component Demo",
-    "questions": [
-      {
-        "question": "How can you access the state of a component from inside of a member function?",
-        "questionType": "text",
-        "questionPic": "https://dummyimage.com/600x400/000/fff&text=X", // if you need to display Picture in Question
-        "answerSelectionType": "single",
-        "answers": [
-          "this.getState()",
-          "this.prototype.stateValue",
-          "this.state",
-          "this.values"
-        ],
-        "correctAnswer": "3",
-        "messageForCorrectAnswer": "Correct answer. Good job.",
-        "messageForIncorrectAnswer": "Incorrect answer. Please try again.",
-        "point": "1"
-      },
-      {
-        "question": "ReactJS is developed by _____?",
-        "questionType": "text",
-        "answerSelectionType": "single",
-        "answers": [
-          "Google Engineers",
-          "Facebook Engineers"
-        ],
-        "correctAnswer": "2",
-        "messageForCorrectAnswer": "Correct answer. Good job.",
-        "messageForIncorrectAnswer": "Incorrect answer. Please try again.",
-        "point": "1"
-      },
-      {
-        "question": "ReactJS is an MVC based framework?",
-        "questionType": "text",
-        "answerSelectionType": "single",
-        "answers": [
-          "True",
-          "False"
-        ],
-        "correctAnswer": "2",
-        "messageForCorrectAnswer": "Correct answer. Good job.",
-        "messageForIncorrectAnswer": "Incorrect answer. Please try again.",
-        "point": "1"
-      },
-    ]
+    "questions": quizes
   }
-  
+
 
   const { authState } = useContext(authContext);
   const [fileList, setFileList] = useState([]);
@@ -111,6 +144,10 @@ function Lessons() {
       });
       message.success('Upload successful');
       options.onSuccess(response.data, options.file);
+
+      setQuizes(response.data)
+      console.log(response.data)
+      setStartQuiz(true);
     } catch (error) {
       message.error('Upload failed');
       options.onError(error);
@@ -124,42 +161,79 @@ function Lessons() {
     </div>
   );
 
+  const uploadPDF = () => {
+
+    setIsSelecting(false);
+  };
+
   return (
     <div>
       <Menu />
       <div className='quizContainer'>
-        <div className='quizContent'>
-          <Quiz quiz={quizz} onComplete={renderCustomResultPage}/>
-        </div>
         
+
+
+
+        {isSelecting ? (
+          <div>
+            <Button type="primary" onClick={showModal}>
+              Adauga o materie noua
+            </Button>
+            <Modal
+              title="Adauga o materie noua"
+              open={open}
+              onOk={handleOk}
+              confirmLoading={confirmLoading}
+              onCancel={handleCancel}
+            >
+              <>
+                <Input placeholder="Numele materiei"
+                  value={addCourse}
+                  onChange={handleInputChange}
+                />
+              </>
+
+            </Modal>
+            <h3> sau </h3>
+            <p> Selecteaza o materie deja adaugata </p>
+
+            <Select
+              showSearch
+              placeholder="Selecteaza"
+              optionFilterProp="children"
+              onChange={onChange}
+              onSearch={onSearch}
+              filterOption={filterOption}
+              options={coursesList}
+            />
+            <Button type="primary" onClick={() => uploadPDF()}>START</Button>
+          </div>
+        )
+          :
+          
+          (<>
+
+          {startQuiz ? <div>
+            <div className='quizContent'>
+            <Quiz quiz={quizz} onComplete={renderCustomResultPage} />
+          </div>
+            </div> 
+            : 
+            <div>
+            <Upload
+              listType="picture-circle"
+              fileList={fileList}
+              onChange={handleChange}
+              accept=".pdf"
+              customRequest={customRequest}
+            >
+              {fileList.length >= 1 ? null : uploadButton}
+            </Upload></div>}
+
+            
+          </>)}
+
       </div>
-      
-      {isSelecting ? (
-        <>
-
-        </>
-      )
-    :
-    (<>
-
-    </>)}
-      
-      {authState.status ? (
-        <>
-          <p>iesti logat pe contul {authState.username}</p>
-          <Upload
-            listType="picture-circle"
-            fileList={fileList}
-            onChange={handleChange}
-            accept=".pdf"
-            customRequest={customRequest}
-          >
-            {fileList.length >= 1 ? null : uploadButton}
-          </Upload>
-        </>
-      ) : (
-        <p>nu iesit logat</p>
-      )}
     </div>
   );
 }
