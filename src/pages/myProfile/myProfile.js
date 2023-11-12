@@ -34,7 +34,7 @@ import {
 function MyProfile() {
 
     const [coursesList, setCoursesList] = useState([]);
-    const [selectedCourse, setSelectedCourse] = useState('')
+    const [dataChart, setDataChart] = useState([])
 
     const options = {
         responsive: true,
@@ -52,7 +52,7 @@ function MyProfile() {
         datasets: [
           {
             label: 'Grade',
-            data: [],
+            data: dataChart,
             borderColor: 'rgb(255, 99, 132)',
             backgroundColor: 'rgba(255, 99, 132, 0.5)',
           },
@@ -92,25 +92,26 @@ function MyProfile() {
     fetchData();
   }, []);
 
-  const getGrades = async () => {
-    const response = await Axios.post(
-      "http://localhost:3001/fetchGrades",
-      {
-        course: selectedCourse,
-      },
-      {
-        headers: {
-          "x-access-token": localStorage.getItem("token"),
-        },
-      }
-    );
-
-    console.log(response.data)
-  };
-
     //PENTRU SELECTAREA MATERIEI
-    const onChange = (value) => {
-        setSelectedCourse(value);
+    const onChange = async (value) => {
+        let template = [];
+        const response = await Axios.post(
+            "http://localhost:3001/fetchGrades",
+            {
+              course: value,
+            },
+            {
+              headers: {
+                "x-access-token": localStorage.getItem("token"),
+              },
+            }
+          );
+          for (let i = 0; i < response.data.length; i++) {
+
+            template.push(response.data[i].nota);
+          }
+          setDataChart(template)
+
       };
       const onSearch = (value) => {
         console.log('search:', value);
@@ -139,7 +140,6 @@ function MyProfile() {
               filterOption={filterOption}
               options={coursesList}
             />
-            <Button type="primary" onClick={() => getGrades()}>START</Button>
             </div>
             <div style={{width: '1000px', marginBottom: '30px'}}>
                 <div className="containerChart">
